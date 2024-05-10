@@ -1,0 +1,99 @@
+﻿@model BookDisplayModel
+@{
+    
+}
+<div class="my-2">
+    <form class="row row-cols-lg-auto g-3 align-items-center">
+
+      <div class="col-12">
+        <label class="visually-hidden" for="genreId">Genres</label>
+        
+        <select class="form-select" id="genreId" name="genreId">
+          <option selected>Genre</option>
+          @foreach(var genre in Model.Genres)
+            {
+                    <option selected="@(genre.Id == Model.GenreId)" value="@genre.Id">@genre.GenreName</option>
+            }
+        </select>
+      </div>
+
+        <div class="col-12">
+            <label class="visually-hidden" for="sterm">Search by title</label>
+            <div class="input-group">
+                <div class="input-group-text"></div>
+                <input type="text" class="form-control" value="@Model.STerm" id="sterm" name="sterm" placeholder="Search by title">
+            </div>
+        </div>
+
+
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Search</button>
+            <a href="/Home/Index" class="btn btn-primary">Reset</a>
+      </div>
+    </form>
+</div>
+<div class="w-100 mt-5 d-flex flex-wrap">
+    @if(Model.Books.Count() == 0)
+    {
+        <p>no books are found</p>
+    }
+    @foreach (var book in Model.Books)
+    {
+        <div>
+            <div class="card mx-3 mb-4" style="width:18rem">
+                @if (!string.IsNullOrEmpty(book.Image))
+                {
+                    <img src="@book.Image" class="card-img-top" style="height:286px;" alt="@book.BookName">
+                }
+                else
+                {
+                    <img src="" class="card-img-top" alt="Image not found">
+                }
+                
+            <div class="card-body h-25">
+                <h5 class="card-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@book.BookName</h5>
+             
+                <div class="card-text d-flex flex-column mb-4">
+                    <p class="mb-0">
+                        Genre : @book.GenreName
+                    </p>
+                        <p class="mb-0" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Author :@book.AuthorName</p>
+                        <p class="mb-0">Price : @book.Price</p>
+                </div>
+                <button type="button" onclick="add(@book.Id)" class="btn btn-primary w-100">Add To Cart</button>
+            </div>
+        </div>
+        </div>
+    }
+   
+</div>
+
+@section Scripts{
+
+    <script>
+        
+        async function add(bookid){
+            var usernameElement = document.getElementById("username");
+            if (usernameElement == null) {
+                window.location.href = "/Identity/Account/Login";
+            }
+
+            var username = usernameElement.innerText;
+            try {
+                var response = await fetch(`/Cart/AddItem?bookId=${bookid}`);
+                if(response.status === 200){
+                    var result = await response.json();
+                    console.log('result', result);
+                    var cartCount = document.getElementById("cartItemCount");
+                    cartCount.innerHTML = result;
+
+                    window.location.href = "#cartItemcount";
+                }
+               
+            }
+            catch (error) {
+                console.log('error', error);
+            }
+        }
+    </script>
+}

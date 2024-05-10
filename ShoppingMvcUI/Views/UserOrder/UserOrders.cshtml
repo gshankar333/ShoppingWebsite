@@ -1,0 +1,90 @@
+﻿@model IEnumerable<Order>
+@{
+    
+}
+
+<div style="width:90%; margin:auto">
+    <a class ="btn btn-primary my-2" href="/Identity/Account/Manage">Back</a>
+    <h3>My Orders</h3>
+    @if (Model != null && Model.Count()>0)
+    {
+        
+
+        <div>
+             <table class="table table-striped">
+
+                 <tr>
+                     <th>
+                         OrderDate
+                     </th>
+                     <th>OrderStatus</th>
+                    
+                 </tr>
+                @foreach(var order in Model)
+                {
+                    <tr>
+                        <td>@order.CreateDate.ToString("dd-MM-yyyy")</td>
+                        <td>@order.OrderStatus.StatusName</td>
+                        <td>@order.Id</td>
+                        <td><a href="@Url.Action("OrderDetails","UserOrder",new {Id = order.Id})">view details</a></td>
+                        @if(order.OrderDetail!=null && order.OrderDetail.Count > 0)
+                        {
+                         @*  <td>
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Book</th>
+                                        <th>Image</th>
+                                        <th>Genre</th>
+                                        <th>Unit Price (INR)</th>
+                                        <th>Qty</th>
+                                        <th>Total Price</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    @foreach (var item in order.OrderDetail)
+                                    {
+                                        <tr>
+                                            <td> @item.Book.BookName</td>
+                                            <td>
+                                                @if (string.IsNullOrEmpty(item.Book.Image))
+                                                {
+                                                    <p>-</p>
+                                                }
+                                                else
+                                                {
+                                                    <img src="@item.Book.Image" alt="@item.Book.BookName" style="width:80px; height:80px" />
+                                                }
+
+                                            </td>
+                                            <td>@item.Book.Genre.GenreName</td>
+                                            <td>@item.Book.Price</td>
+                                            <td>@item.Quantity</td>
+                                            <td>@(item.Book.Price * item.Quantity)</td>
+                                            <td>
+                                                <a class="btn btn-info" href="/Cart/AddItem?bookId=@item.BookId&&redirect=1">+</a>
+                                                <a class="btn btn-info" href="/Cart/removeitem?bookid=@item.BookId">-</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+
+                          </td> *@
+                        }
+                    </tr>
+                }
+
+            </table>
+
+        </div>
+
+
+    }
+    else
+    {
+
+        <h5>
+            no orders
+        </h5>
+    }
+
+</div>
+

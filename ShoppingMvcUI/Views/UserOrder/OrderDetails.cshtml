@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Order>
+@{
+
+}
+
+<p>order view page</p>
+<a class="btn btn-primary" href="/UserOrder/UserOrders">Back to Orders</a>
+
+
+@if (Model != null && Model.Count() > 0)
+{
+    @foreach(var order in Model)
+    {
+        @if (order.OrderDetail != null && order.OrderDetail.Count > 0)
+        {
+            <table class="table table-striped">
+                <tr>
+                    <th>Book</th>
+                    <th>Image</th>
+                    <th>Genre</th>
+                    <th>Unit Price (INR)</th>
+                    <th>Qty</th>
+                    <th>Total Price</th>
+                    
+                </tr>
+                @foreach (var item in order.OrderDetail)
+                {
+                    <tr>
+                        <td> @item.Book.BookName</td>
+                        <td>
+                            @if (string.IsNullOrEmpty(item.Book.Image))
+                            {
+                                <p>-</p>
+                            }
+                            else
+                            {
+                                <img src="@item.Book.Image" alt="@item.Book.BookName" style="width:80px; height:80px" />
+                            }
+
+                        </td>
+                        <td>@item.Book.Genre.GenreName</td>
+                        <td>@item.Book.Price</td>
+                        <td>@item.Quantity</td>
+                        <td>@(item.Book.Price * item.Quantity)</td>
+                        <td>@(item.Order.OrderStatus.StatusName)</td>
+                    </tr>
+                }
+            </table>
+            <div>
+                <span> Total (INR) </span>
+                <span>@(order.OrderDetail.Select(item => item.Book.Price*item.Quantity).Sum())</span>
+            </div>
+        }
+        else
+        {
+            <p>Data not found</p>
+        }
+    }
+}
+else
+{
+    <p>Data not found</p>
+}
